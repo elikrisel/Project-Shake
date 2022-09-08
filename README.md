@@ -1,2 +1,2 @@
 # Project-Shake
-Experimenting with camera movement and camera shake
+Experimenting with character movement and camera shake in orthographic view. Add a event?
