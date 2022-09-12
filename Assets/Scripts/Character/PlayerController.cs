@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Networking;
+using UnityEngine.Bindings;
+
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,37 +13,72 @@ public class PlayerController : MonoBehaviour
     //private PlayerControls playerControls;
     private Rigidbody rb;
     private Vector3 moveDirection;
-    private GameObject characterArt;
+    
+    [SerializeField] Transform characterArt;
     
     //private Vector2 moveInput = Vector2.zero;
+    private float moveX;
+    private float moveY;
 
     [Header("Adjustable Variables")] 
     [SerializeField] private float moveSpeed;
-    [SerializeField] private float jumpForce;
+    
     [SerializeField] private LayerMask layerMask;
 
-
+    
+    
     private void Awake()
     {
-        //playerControls = GetComponent<PlayerControls>();
+       // playerControls = new PlayerControls();
         rb = GetComponent<Rigidbody>();
-        characterArt = transform.Find("Art").gameObject;
+        
+    }
+    
+    #region Need to read up on New Input System
+    /*
+    private void OnEnable()
+    {
+        playerControls.Player.Movement.performed += DoMove;
 
     }
+
+
+    private void OnDisable()
+    {
+        playerControls.Player.Movement.canceled -= DoMove;
+
+    }
+    
+    
+    private void DoMove(InputAction.CallbackContext ctx)
+    {
+        moveInput = ctx.ReadValue<Vector2>();
+
+       
+        
+
+    }
+    */
+    #endregion
 
     void Update()
     {
-        var moveX = Input.GetAxis("Horizontal");
-        var moveZ = Input.GetAxis("Vertical");
-
+        moveX = Input.GetAxis("Horizontal");
+        moveY = Input.GetAxis("Vertical");
         
-        moveDirection = new Vector3(moveX, moveDirection.y, moveZ) * Time.deltaTime;  
-        
-
+      
     }
-
+    
+    
+    
+    
+    
     private void FixedUpdate()
     {
+        
+        moveDirection = new Vector3(moveX, moveDirection.y, moveY) * Time.fixedDeltaTime;
+
+        
         Movement(moveDirection);
         
     }
@@ -51,23 +87,15 @@ public class PlayerController : MonoBehaviour
     {
 
         rb.AddForce(new Vector3(move.x * moveSpeed, move.y, move.z * moveSpeed), ForceMode.Impulse);
-
+    
 
     }
-    
 
-    #region Updating when implementing new Input System
-    // private void OnEnable()
-    // {
-    //     playerControls.Player.Movement.enabled += DoMove;
-    // }
-    //
-    //
-    //
-    // private void OnDisable()
-    // {
-    //     
-    // }
-    #endregion
-    
+    private void Rotation()
+    {
+        
+        
+        
+    }
+
 }

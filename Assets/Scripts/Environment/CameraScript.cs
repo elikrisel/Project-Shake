@@ -27,7 +27,8 @@ public class CameraScript : MonoBehaviour
         Vector3 targetPosition = player.position + offset;
 
         mainCamera.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
-
+        
+        
 
     }
 }
