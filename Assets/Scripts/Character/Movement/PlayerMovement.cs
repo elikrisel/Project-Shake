@@ -2,21 +2,28 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using OpenCover.Framework.Model;
 using UnityEngine;
+using UnityEngine.Pool;
+using Object = System.Object;
 
 public class PlayerMovement : MonoBehaviour
 {
   [Header("Components")]
   private PlayerHandler input;
   private Rigidbody rb;
-  //[SerializeField] private Transform playerArt;
+  
   
   [Header("Adjustable Variables")]
   [SerializeField] private float moveSpeed = 10f;
-
   [SerializeField] private float rotateSpeed = 50f;
-  
 
+  [Header("Shooting")] 
+  [SerializeField] private GameObject bulletPrefab;
+
+  [SerializeField] private Transform bulletPosition;
+
+  
   private void Awake()
   {
     input = GetComponent<PlayerHandler>();
@@ -33,7 +40,13 @@ public class PlayerMovement : MonoBehaviour
     //Rotate
     Rotation(moveDirection);
 
-
+    if (Input.GetKeyDown(KeyCode.Space))
+    {
+      Fire();
+  
+    }
+    
+    
   }
 
   private void Rotation(Vector3 moveDirection)
@@ -62,5 +75,24 @@ public class PlayerMovement : MonoBehaviour
 
 
   }
+
+
+  void Fire()
+  {
+
+    GameObject bullet = Objectpool.instance.GetPooledObject();
+    if (bullet != null)
+    {
+      bullet.transform.position = bulletPrefab.transform.position;
+      bullet.transform.rotation = bulletPrefab.transform.rotation;
+      bullet.SetActive(true);
+
+    }
+    
+    bullet.SetActive(false);
+
+
+  }
+  
   
 }

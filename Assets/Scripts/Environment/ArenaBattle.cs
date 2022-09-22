@@ -24,21 +24,22 @@ public class ArenaBattle : MonoBehaviour
   private void Awake()
   {
     state = StateOfGame.Idle;
-   
+    
   }
 
 
   void Start()
   {
     
-    triggerArea.OnPlayerTrigger += TriggerAreaOnOnPlayerTrigger; 
+    triggerArea.OnPlayerTrigger += TriggerAreaOnOnPlayerTrigger;
     
-    
+
   }
 
   private void Update()
   {
     Debug.Log(state);
+    
   }
 
   private void TriggerAreaOnOnPlayerTrigger(object sender, EventArgs e)
@@ -60,6 +61,7 @@ public class ArenaBattle : MonoBehaviour
     Debug.Log("Arena commencing");
     state = StateOfGame.Active;
     enemySpawn.GetComponent<CubeSpawn>().Spawn();
+   
 
   }
   
