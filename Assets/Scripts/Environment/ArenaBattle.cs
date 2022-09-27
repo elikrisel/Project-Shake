@@ -7,13 +7,17 @@ using Random = UnityEngine.Random;
 public class ArenaBattle : MonoBehaviour
 {
   [SerializeField] TriggerArea triggerArea;
-  [SerializeField] GameObject spawnEnemy;
+  [SerializeField] EnemySpawn spawnEnemyPf;
 
+
+  //public List<Vector3> spawnPositionList;
   
   public bool enemiesLeft;
 
   public event EventHandler OnBattleStarted;
   public event EventHandler OnBattleEnded;
+
+  public int timerToSpawn;
   
   private enum StateOfGame
   {
@@ -28,10 +32,13 @@ public class ArenaBattle : MonoBehaviour
 
   private void Awake()
   {
-
-    
     state = StateOfGame.Idle;
-    
+    /*spawnPositionList = new List<Vector3>();
+    foreach (Transform spawnPosition in transform.Find("SpawnPositions"))
+    {
+      spawnPositionList.Add(spawnPosition.position);
+    }
+    */
   }
 
 
@@ -46,7 +53,7 @@ public class ArenaBattle : MonoBehaviour
   private void Update()
   {
     Debug.Log(state);
-    
+    //Debug.Log("Spawn: " + spawnPositionList);
   }
 
   private void TriggerAreaOnOnPlayerTrigger(object sender, EventArgs e)
@@ -69,8 +76,14 @@ public class ArenaBattle : MonoBehaviour
     state = StateOfGame.Active;
     //enemiesLeft = true;
     OnBattleStarted?.Invoke(this, EventArgs.Empty);
-    spawnEnemy.GetComponent<EnemySpawn>().Spawn();
+    SpawnEnemy();  
+     
+    
+    
 
+    
+    
+    
     if (enemiesLeft)
     {
       EndBattle();
@@ -85,6 +98,19 @@ public class ArenaBattle : MonoBehaviour
     state = StateOfGame.End; 
       OnBattleEnded?.Invoke(this,EventArgs.Empty);
       
+
+  }
+
+
+  private void SpawnEnemy()
+  {
+    //Vector3 spawnPosition = spawnPositionList[Random.Range(0, spawnPositionList.Count)];
+    var spawnPosition = transform.position + new Vector3(0,0,32);
+    
+    EnemySpawn enemySpawner = Instantiate(spawnEnemyPf, spawnPosition, Quaternion.identity);
+    enemySpawner.Spawn();
+
+    
 
   }
   
