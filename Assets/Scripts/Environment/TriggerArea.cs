@@ -1,32 +1,36 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TriggerArea : MonoBehaviour
 {
-    private Camera ortoCamera;
+    [HideInInspector]
+    public Camera ortoCamera;
     public event EventHandler OnPlayerTrigger;
+
+    [SerializeField] private ArenaBattle arenaBattle;
+    
 
     private void Awake()
     {
         ortoCamera = Camera.main;
     }
-
-    void Start()
-    {
-
-        ortoCamera.orthographicSize = 5;
-
-
-    }
-
+    
     void Update()
     {
         
         Debug.Log("Ortographic size: " + ortoCamera.orthographicSize);
+
+        if (arenaBattle.enemiesLeft)
+        {
+            ortoCamera.orthographicSize = 7;    
+            
+        }
         
     }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -41,4 +45,7 @@ public class TriggerArea : MonoBehaviour
         }
             
     }
+    
+    
+    
 }

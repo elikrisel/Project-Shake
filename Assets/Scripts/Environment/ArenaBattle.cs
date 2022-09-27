@@ -7,9 +7,14 @@ using Random = UnityEngine.Random;
 public class ArenaBattle : MonoBehaviour
 {
   [SerializeField] TriggerArea triggerArea;
-  [SerializeField] GameObject enemySpawn;
-  
+  [SerializeField] GameObject spawnEnemy;
 
+  
+  public bool enemiesLeft;
+
+  public event EventHandler OnBattleStarted;
+  public event EventHandler OnBattleEnded;
+  
   private enum StateOfGame
   {
     Idle,
@@ -23,6 +28,8 @@ public class ArenaBattle : MonoBehaviour
 
   private void Awake()
   {
+
+    
     state = StateOfGame.Idle;
     
   }
@@ -60,10 +67,25 @@ public class ArenaBattle : MonoBehaviour
     
     Debug.Log("Arena commencing");
     state = StateOfGame.Active;
-    enemySpawn.GetComponent<CubeSpawn>().Spawn();
-   
+    //enemiesLeft = true;
+    OnBattleStarted?.Invoke(this, EventArgs.Empty);
+    spawnEnemy.GetComponent<EnemySpawn>().Spawn();
+
+    if (enemiesLeft)
+    {
+      EndBattle();
+      
+    }
 
   }
-  
+
+  public void EndBattle()
+  {
+         
+    state = StateOfGame.End; 
+      OnBattleEnded?.Invoke(this,EventArgs.Empty);
+      
+
+  }
   
 }
