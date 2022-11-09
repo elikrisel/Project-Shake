@@ -1,10 +1,8 @@
 using System;
 using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Random = UnityEngine.Random;
+
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadActions, PlayerControls.IPlayer_KBMActions
@@ -13,15 +11,23 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    private PlayerControls input;
    private Rigidbody rb;
    [SerializeField] private Transform playerArt;
+
    
    [Header("Input")]
    private Vector2 readInput;
-   private Vector2 lookDirection = Vector2.zero;
+   private Vector3 lookDirection = Vector3.zero;
    private Vector2 moveDirection = Vector2.zero;
    private InputAction buttonPrompt;
 
-   #region State
-   public enum ControllerState
+    public float lookSpeed = 180f;
+    public float moveSpeed = 1.0f;
+    public float maxSpeed = 20f;
+    public float dampenForce = 4f;
+    public float maxDampen = 4f;
+
+
+    #region State
+    public enum ControllerState
    {
       Keyboard,
       Gamepad
@@ -29,13 +35,11 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    }
 
    public ControllerState state;
-   #endregion
-   
-   
-   [Header("Adjustable Variables")]
-   public float moveSpeed = 5f;
-   public float lookSpeed = 5f;
-   
+    #endregion
+
+
+    
+
    [Header("Acceleration")]
    private Vector3 acceleration;
    
@@ -85,7 +89,7 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
          
       }
       
-      LookRotation(lookDirection);
+      LookRotation();
       
 
    }
@@ -128,16 +132,15 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
 
    private void Movement(Vector2 moveDirection)
    {
-      this.moveDirection = moveDirection;
-      
-      if (moveDirection != Vector2.zero)
-      {
-         rb.AddForce(new Vector3(this.moveDirection.x * moveSpeed,0,this.moveDirection.y * moveSpeed),ForceMode.Impulse);
-         
-      }
-      
+        this.moveDirection = moveDirection;
+        var dampener = Mathf.Clamp(rb.velocity.x * dampenForce, -maxDampen, maxDampen);
+        var verticalforce = Mathf.Clamp(rb.velocity.z * dampenForce, -maxDampen, maxDampen);
+        rb.AddForce(new Vector3((moveDirection.x * moveSpeed) - dampener, 0, (moveDirection.y * moveSpeed) - verticalforce));
 
-   }
+        Debug.Log(dampener);
+        Debug.Log(verticalforce);
+
+    }
    
    #endregion
    
@@ -164,15 +167,10 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
 
    }
 
-   private void LookRotation(Vector2 lookDirection)
+   private void LookRotation()
    {
-      this.lookDirection = lookDirection;
-      if (lookDirection != Vector2.zero)
-      {
-         var rotation = Quaternion.LookRotation(lookDirection);
-         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, lookSpeed);
-  
-      }
+      
+     
 
       
 
@@ -207,7 +205,6 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    private void Shoot()
    {
       
-      Debug.Log("Pressing shoot"); 
    }
    
    #endregion
@@ -240,7 +237,7 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
 
    void Interact()
    {
-      Debug.Log("Interacting");
+      
       
    }
    #endregion
