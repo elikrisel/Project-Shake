@@ -1,101 +1,248 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Bindings;
+using Random = UnityEngine.Random;
 
-
-public class PlayerController : MonoBehaviour
+[RequireComponent(typeof(Rigidbody))]
+public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadActions, PlayerControls.IPlayer_KBMActions
 {
-    [Header("Private Components")]
-    //private PlayerControls playerControls;
-    private Rigidbody rb;
-    private Vector3 moveDirection;
-    
-    [SerializeField] Transform characterArt;
-    
-    //private Vector2 moveInput = Vector2.zero;
-    private float moveX;
-    private float moveY;
+   [Header("Components")]
+   private PlayerControls input;
+   private Rigidbody rb;
+   [SerializeField] private Transform playerArt;
+   
+   [Header("Input")]
+   private Vector2 readInput;
+   private Vector2 lookDirection = Vector2.zero;
+   private Vector2 moveDirection = Vector2.zero;
+   private InputAction buttonPrompt;
 
-    [Header("Adjustable Variables")] 
-    [SerializeField] private float moveSpeed;
-    
-    [SerializeField] private LayerMask layerMask;
-
-    
-    
-    private void Awake()
-    {
-       // playerControls = new PlayerControls();
-        rb = GetComponent<Rigidbody>();
-        
-    }
-    
-    #region Need to read up on New Input System
-    /*
-    private void OnEnable()
-    {
-        playerControls.Player.Movement.performed += DoMove;
-
-    }
-
-
-    private void OnDisable()
-    {
-        playerControls.Player.Movement.canceled -= DoMove;
-
-    }
-    
-    
-    private void DoMove(InputAction.CallbackContext ctx)
-    {
-        moveInput = ctx.ReadValue<Vector2>();
-
-       
-        
-
-    }
-    */
-    #endregion
-
-    void Update()
-    {
-        moveX = Input.GetAxis("Horizontal");
-        moveY = Input.GetAxis("Vertical");
-        
+   #region State
+   public enum ControllerState
+   {
+      Keyboard,
+      Gamepad
       
-    }
-    
-    
-    
-    
-    
-    private void FixedUpdate()
-    {
-        
-        moveDirection = new Vector3(moveX, moveDirection.y, moveY) * Time.fixedDeltaTime;
+   }
 
-        
-        Movement(moveDirection);
-        
-    }
+   public ControllerState state;
+   #endregion
+   
+   
+   [Header("Adjustable Variables")]
+   public float moveSpeed = 5f;
+   public float lookSpeed = 5f;
+   
+   [Header("Acceleration")]
+   private Vector3 acceleration;
+   
+   public bool usingGamepad;
+   
 
-    private void Movement(Vector3 move)
-    {
+   #region Enable and Disable
+   private void OnEnable()
+   {
+      if (input == null)
+      {
+         input = new PlayerControls();
+         input.Player_Gamepad.SetCallbacks(this);
+         input.Player_KBM.SetCallbacks(this);
+         input.Enable();
+      }
+   }
 
-        rb.AddForce(new Vector3(move.x * moveSpeed, move.y, move.z * moveSpeed), ForceMode.Impulse);
+   private void OnDisable()
+   {
+      if (input != null)
+      {
+         input.Disable();
+         input = null;
+
+      }
+   }
+   #endregion
+
+
+   private void Awake()
+   {
+      rb = GetComponent<Rigidbody>();
+   }
+
+   private void Update()
+   {
+      switch (state)
+      {
+         case ControllerState.Keyboard:
+            usingGamepad = false;
+            break;
+         case ControllerState.Gamepad:
+            usingGamepad = true;
+            break;
+         
+         
+      }
+      
+      LookRotation(lookDirection);
+      
+
+   }
+
+   
+   private void FixedUpdate()
+   {
+      if (readInput != Vector2.zero)
+      {
+         Movement(moveDirection);
+         
+
+      }
+      
+      
+   }
+
+
+   #region Movement interface
+   void PlayerControls.IPlayer_GamepadActions.OnMove(InputAction.CallbackContext ctx)
+   {
+      
+         readInput = ctx.ReadValue<Vector2>();
+         moveDirection = readInput;
+
+         state = ctx.action.actionMap.name == "Player_Gamepad" ? ControllerState.Gamepad : ControllerState.Keyboard;
+         
+         
+   }
+
+   void PlayerControls.IPlayer_KBMActions.OnMove(InputAction.CallbackContext ctx)
+   {
+      readInput = ctx.ReadValue<Vector2>();
+      moveDirection = readInput;
+
+      state = ctx.action.actionMap.name == "Player_KBM" ? ControllerState.Keyboard : ControllerState.Gamepad;
+      
+
+   }
+
+   private void Movement(Vector2 moveDirection)
+   {
+      this.moveDirection = moveDirection;
+      
+      if (moveDirection != Vector2.zero)
+      {
+         rb.AddForce(new Vector3(this.moveDirection.x * moveSpeed,0,this.moveDirection.y * moveSpeed),ForceMode.Impulse);
+         
+      }
+      
+
+   }
+   
+   #endregion
+   
+   #region Look Interface
+   void PlayerControls.IPlayer_KBMActions.OnLook(InputAction.CallbackContext ctx)
+   {
+      readInput = ctx.ReadValue<Vector2>();
+      lookDirection = readInput;
+
+      state = ctx.action.actionMap.name == "Player_KBM" ? ControllerState.Keyboard : ControllerState.Gamepad;
+
+      
+
+   }
+   
+   void PlayerControls.IPlayer_GamepadActions.OnLook(InputAction.CallbackContext ctx)
+   {
+      readInput = ctx.ReadValue<Vector2>();
+      lookDirection = readInput;
+
+      state = ctx.action.actionMap.name == "Player_Gamepad" ? ControllerState.Gamepad : ControllerState.Keyboard;
+
     
 
-    }
+   }
 
-    private void Rotation()
-    {
-        
-        
-        
-    }
+   private void LookRotation(Vector2 lookDirection)
+   {
+      this.lookDirection = lookDirection;
+      if (lookDirection != Vector2.zero)
+      {
+         var rotation = Quaternion.LookRotation(lookDirection);
+         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, lookSpeed);
+  
+      }
 
+      
+
+   }
+   
+   #endregion
+   
+   #region Shoot Interface
+   void PlayerControls.IPlayer_KBMActions.OnShoot(InputAction.CallbackContext ctx)
+   {
+      var buttonPress = input.Player_Gamepad.Shoot;
+      buttonPrompt = buttonPress;
+      
+      if (ctx.action.actionMap.name == "Player_KBM")
+      {
+         state = ControllerState.Keyboard;
+
+      }
+      else
+      {
+         state = ControllerState.Gamepad;
+      }
+      Shoot();
+   }
+   void PlayerControls.IPlayer_GamepadActions.OnShoot(InputAction.CallbackContext ctx)
+   {
+      state = ctx.action.actionMap.name == "Player_Gamepad" ? ControllerState.Gamepad : ControllerState.Keyboard;
+
+      Shoot();
+   }
+
+   private void Shoot()
+   {
+      
+      Debug.Log("Pressing shoot"); 
+   }
+   
+   #endregion
+   
+   #region Interact interface
+   
+   void PlayerControls.IPlayer_KBMActions.OnInteract(InputAction.CallbackContext ctx)
+   {
+      state = ctx.action.actionMap.name == "Player_KBM" ? ControllerState.Keyboard : ControllerState.Gamepad;
+
+      Interact();
+   }
+   void PlayerControls.IPlayer_GamepadActions.OnInteract(InputAction.CallbackContext ctx)
+   {
+      var buttonPress = input.Player_Gamepad.Interact;
+      buttonPrompt = buttonPress;
+      
+      if (ctx.action.actionMap.name == "Player_Gamepad")
+      {
+         state = ControllerState.Gamepad;
+
+      }
+      else
+      {
+         state = ControllerState.Keyboard;
+      }
+      Interact();
+      
+   }
+
+   void Interact()
+   {
+      Debug.Log("Interacting");
+      
+   }
+   #endregion
+   
 }

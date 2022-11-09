@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.ProBuilder.MeshOperations;
 using Random = UnityEngine.Random;
 
 public class ArenaBattle : MonoBehaviour
 {
   [SerializeField] TriggerArea triggerArea;
   [SerializeField] EnemySpawn spawnEnemyPf;
-
+  [SerializeField] ShowGun showGun;
 
   //public List<Vector3> spawnPositionList;
   
@@ -71,11 +72,22 @@ public class ArenaBattle : MonoBehaviour
 
   void StartBattle()
   {
+
     
     Debug.Log("Arena commencing");
     state = StateOfGame.Active;
     //enemiesLeft = true;
     OnBattleStarted?.Invoke(this, EventArgs.Empty);
+    if (showGun.gunSelected)
+    {
+      return;
+    }
+    showGun.gunState = ShowGun.GunList.RightGun;  
+
+        
+      
+    
+    
     SpawnEnemy();  
      
     
@@ -95,7 +107,8 @@ public class ArenaBattle : MonoBehaviour
   public void EndBattle()
   {
          
-    state = StateOfGame.End; 
+    state = StateOfGame.End;
+    showGun.gunState = ShowGun.GunList.NoGun;
       OnBattleEnded?.Invoke(this,EventArgs.Empty);
       
 

@@ -35,7 +35,7 @@ public class TriggerArea : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
 
-        PlayerHandler player = other.GetComponent<PlayerHandler>();
+        PlayerController player = other.GetComponent<PlayerController>();
         
         if (player != null)
         {
