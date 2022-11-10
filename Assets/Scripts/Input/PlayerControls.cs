@@ -123,7 +123,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""ee3cd475-6323-45d8-bb7a-9bd06c9cb91b"",
-                    ""path"": ""<Mouse>/delta"",
+                    ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -181,12 +181,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Look"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Value"",
                     ""id"": ""77a29998-f505-4f7a-aa61-f51f73c51326"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": ""StickDeadzone"",
+                    ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Shoot"",

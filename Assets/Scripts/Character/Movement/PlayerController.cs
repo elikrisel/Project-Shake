@@ -10,16 +10,24 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    [Header("Components")]
    private PlayerControls input;
    private Rigidbody rb;
-   [SerializeField] private Transform playerArt;
+   
+   [SerializeField]
+   private Transform orientation;
 
+   [SerializeField] private Transform playerArt;
+   
+   
+   
+   [SerializeField] private Camera mainCamera;
    
    [Header("Input")]
    private Vector2 readInput;
-   private Vector3 lookDirection = Vector3.zero;
-   private Vector2 moveDirection = Vector2.zero;
+   private Vector2 lookInput;
+   private Vector2 moveInput;
    private InputAction buttonPrompt;
-
-    public float lookSpeed = 180f;
+   
+   
+   [Header("Adjustable Variables")]
     public float moveSpeed = 1.0f;
     public float maxSpeed = 20f;
     public float dampenForce = 4f;
@@ -40,9 +48,7 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
 
     
 
-   [Header("Acceleration")]
-   private Vector3 acceleration;
-   
+   [Header("Conditions")]
    public bool usingGamepad;
    
 
@@ -73,6 +79,8 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    private void Awake()
    {
       rb = GetComponent<Rigidbody>();
+      
+      
    }
 
    private void Update()
@@ -88,10 +96,11 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
          
          
       }
+      // Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+      // //set orientation
+      // Vector3 viewDir = transform.position - new Vector3(mouseWorldPos.x, transform.position.y, mouseWorldPos.y);
+      // orientation.forward = viewDir.normalized;
       
-      LookRotation();
-      
-
    }
 
    
@@ -99,12 +108,25 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    {
       if (readInput != Vector2.zero)
       {
-         Movement(moveDirection);
+         Movement(moveInput);
          
 
       }
       
       
+   }
+
+   private void OnDrawGizmos()
+   {
+      Gizmos.color = Color.blue;
+      Gizmos.DrawLine(transform.position, orientation.forward);
+      
+      Ray ray = mainCamera.ScreenPointToRay(readInput);
+
+      if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+      {
+         Gizmos.DrawLine(mainCamera.transform.position, hit.point);
+      }
    }
 
 
@@ -113,7 +135,7 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    {
       
          readInput = ctx.ReadValue<Vector2>();
-         moveDirection = readInput;
+         moveInput = readInput;
 
          state = ctx.action.actionMap.name == "Player_Gamepad" ? ControllerState.Gamepad : ControllerState.Keyboard;
          
@@ -123,7 +145,7 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    void PlayerControls.IPlayer_KBMActions.OnMove(InputAction.CallbackContext ctx)
    {
       readInput = ctx.ReadValue<Vector2>();
-      moveDirection = readInput;
+      moveInput = readInput;
 
       state = ctx.action.actionMap.name == "Player_KBM" ? ControllerState.Keyboard : ControllerState.Gamepad;
       
@@ -132,14 +154,11 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
 
    private void Movement(Vector2 moveDirection)
    {
-        this.moveDirection = moveDirection;
-        var dampener = Mathf.Clamp(rb.velocity.x * dampenForce, -maxDampen, maxDampen);
-        var verticalforce = Mathf.Clamp(rb.velocity.z * dampenForce, -maxDampen, maxDampen);
-        rb.AddForce(new Vector3((moveDirection.x * moveSpeed) - dampener, 0, (moveDirection.y * moveSpeed) - verticalforce));
-
-        Debug.Log(dampener);
-        Debug.Log(verticalforce);
-
+        this.moveInput = moveDirection;
+        var horizontalDampener = Mathf.Clamp(rb.velocity.x * dampenForce, -maxDampen, maxDampen);
+        var verticalDampener = Mathf.Clamp(rb.velocity.z * dampenForce, -maxDampen, maxDampen);
+        rb.AddForce(new Vector3((moveDirection.x * moveSpeed) - horizontalDampener, 0, (moveDirection.y * moveSpeed) - verticalDampener));
+      
     }
    
    #endregion
@@ -147,32 +166,50 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    #region Look Interface
    void PlayerControls.IPlayer_KBMActions.OnLook(InputAction.CallbackContext ctx)
    {
-      readInput = ctx.ReadValue<Vector2>();
-      lookDirection = readInput;
 
+      readInput = ctx.ReadValue<Vector2>();
+      lookInput = readInput;
+      Ray ray = mainCamera.ScreenPointToRay(readInput);
+
+      Vector3 targetDirection = Vector3.zero;
+      if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+      {
+         targetDirection = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+         print("look target: " + targetDirection);
+      }
+      
       state = ctx.action.actionMap.name == "Player_KBM" ? ControllerState.Keyboard : ControllerState.Gamepad;
 
-      
+      LookRotation(targetDirection);
 
    }
-   
+
    void PlayerControls.IPlayer_GamepadActions.OnLook(InputAction.CallbackContext ctx)
    {
       readInput = ctx.ReadValue<Vector2>();
-      lookDirection = readInput;
+      lookInput = readInput;
+      Ray ray = mainCamera.ScreenPointToRay(readInput);
+
+      Vector3 targetDirection = Vector3.zero;
+      if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+      {
+         targetDirection = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+         print("look target: " + targetDirection);
+      }
+
+
 
       state = ctx.action.actionMap.name == "Player_Gamepad" ? ControllerState.Gamepad : ControllerState.Keyboard;
+      
+      LookRotation(targetDirection);
 
-    
 
-   }
+}
 
-   private void LookRotation()
+   private void LookRotation(Vector3 direction)
    {
-      
-     
 
-      
+      transform.LookAt(direction);
 
    }
    
