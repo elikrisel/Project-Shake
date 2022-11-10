@@ -1393,7 +1393,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: -50
+  near clip plane: 0
   far clip plane: 1000.1
   field of view: 60
   orthographic: 1
@@ -1421,7 +1421,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 767796309}
   m_LocalRotation: {x: 0.23911765, y: 0.3696438, z: -0.09904577, w: 0.89239913}
-  m_LocalPosition: {x: 0, y: 0, z: -147.4}
+  m_LocalPosition: {x: -15.74, y: 12.11, z: -161.32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1442,7 +1442,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 793434456}
   mainCamera: {fileID: 767796312}
-  offset: {x: 0, y: 1, z: 5}
+  offset: {x: -28.73, y: 26.95, z: -26.16}
   smoothTime: 0.3
 --- !u!114 &767796315
 MonoBehaviour:
@@ -1556,6 +1556,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e91a8b1dec66c4ea4f18647e5429b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  orientation: {fileID: 1954475285}
+  playerArt: {fileID: 1091369187}
   mainCamera: {fileID: 767796311}
   moveSpeed: 50
   maxSpeed: 20

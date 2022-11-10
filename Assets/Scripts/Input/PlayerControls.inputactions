@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interact",
+                    "name": "SwitchWeapon",
                     "type": "Button",
                     "id": "834dea3d-c632-4052-bac1-a838c2d9029f",
                     "expectedControlType": "Button",
@@ -111,17 +111,6 @@
                 },
                 {
                     "name": "",
-                    "id": "0fb5b489-a339-4940-88ac-16e07300699f",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Shoot",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "5406ce36-966e-4d79-b02d-114bb9c40a52",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
@@ -138,7 +127,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Interact",
+                    "action": "SwitchWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -176,7 +165,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interact",
+                    "name": "SwitchWeapon",
                     "type": "Button",
                     "id": "838f2f60-39cd-4fbb-9599-add2f7271917",
                     "expectedControlType": "Button",
@@ -200,11 +189,11 @@
                 {
                     "name": "",
                     "id": "5ce42a29-660e-4e3c-abe5-c96b525f5322",
-                    "path": "<Gamepad>/buttonSouth",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Interact",
+                    "action": "SwitchWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

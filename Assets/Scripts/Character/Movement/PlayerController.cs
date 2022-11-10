@@ -193,12 +193,10 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
       Vector3 targetDirection = Vector3.zero;
       if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
       {
-         targetDirection = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+         targetDirection = new Vector3(hit.point.x,transform.position.y,hit.point.z);
          print("look target: " + targetDirection);
       }
-
-
-
+      
       state = ctx.action.actionMap.name == "Player_Gamepad" ? ControllerState.Gamepad : ControllerState.Keyboard;
       
       LookRotation(targetDirection);
@@ -248,17 +246,25 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    
    #region Interact interface
    
-   void PlayerControls.IPlayer_KBMActions.OnInteract(InputAction.CallbackContext ctx)
+   void PlayerControls.IPlayer_KBMActions.OnSwitchWeapon(InputAction.CallbackContext ctx)
    {
       state = ctx.action.actionMap.name == "Player_KBM" ? ControllerState.Keyboard : ControllerState.Gamepad;
+   
+      if (ctx.action.actionMap.name == "Player_KBM")
+      {
+         state = ControllerState.Keyboard;
 
+      }
+      else
+      {
+         state = ControllerState.Gamepad;
+      }
+      
       Interact();
    }
-   void PlayerControls.IPlayer_GamepadActions.OnInteract(InputAction.CallbackContext ctx)
+   void PlayerControls.IPlayer_GamepadActions.OnSwitchWeapon(InputAction.CallbackContext ctx)
    {
-      var buttonPress = input.Player_Gamepad.Interact;
-      buttonPrompt = buttonPress;
-      
+
       if (ctx.action.actionMap.name == "Player_Gamepad")
       {
          state = ControllerState.Gamepad;
