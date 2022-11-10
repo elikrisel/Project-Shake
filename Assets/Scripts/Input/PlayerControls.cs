@@ -29,7 +29,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Move"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""aeb2fba3-b63e-455e-a91c-3bd5b588a533"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -47,7 +47,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Shoot"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""83874468-35cd-446b-9d99-92bc4c8b00d0"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -172,10 +172,10 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Move"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""5bab60d1-014e-465f-8454-8a0743b157ce"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
@@ -184,13 +184,13 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""77a29998-f505-4f7a-aa61-f51f73c51326"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone"",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""Shoot"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""f890515a-6d1d-44f5-bd04-30b7eacf039f"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -440,14 +440,14 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     public Player_GamepadActions @Player_Gamepad => new Player_GamepadActions(this);
     public interface IPlayer_KBMActions
     {
-        void OnMove(InputAction.CallbackContext ctx);
+        void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
     }
     public interface IPlayer_GamepadActions
     {
-        void OnMove(InputAction.CallbackContext ctx);
+        void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
