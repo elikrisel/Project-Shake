@@ -1,8 +1,7 @@
 using System;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
+
 
 
 [RequireComponent(typeof(Rigidbody))]
@@ -13,12 +12,10 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    private Rigidbody rb;
    public ShowGun showGun;
    public GunScript gun;
-   [SerializeField]
-   private Transform orientation;
+
    
-   
-   
-   
+   [SerializeField] private LayerMask clippingLayer;
+   [SerializeField] private Transform orientation;
    [SerializeField] private Camera mainCamera;
    
    [Header("Input")]
@@ -33,6 +30,8 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
     public float maxDampen = 4f;
     public float controllerDeadZone = 0.1f;
     public float rotateSmoothness = 1000f;
+
+    
 
     #region State
     public enum ControllerState
@@ -171,12 +170,11 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
       readInput = ctx.ReadValue<Vector2>();
       lookInput = readInput;
       Ray ray = mainCamera.ScreenPointToRay(readInput);
-
       Vector3 targetDirection = Vector3.zero;
-      if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+      if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, clippingLayer, QueryTriggerInteraction.Collide))
       {
          targetDirection = new Vector3(hit.point.x, transform.position.y, hit.point.z);
-         print("look target: " + targetDirection);
+         
       }
       
       state = ctx.action.actionMap.name == "Player_KBM" ? ControllerState.Keyboard : ControllerState.Gamepad;

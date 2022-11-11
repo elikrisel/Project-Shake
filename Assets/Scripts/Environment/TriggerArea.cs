@@ -25,7 +25,7 @@ public class TriggerArea : MonoBehaviour
 
         if (arenaBattle.enemiesLeft)
         {
-            ortoCamera.orthographicSize = 7;    
+            ortoCamera.orthographicSize = 20;    
             
         }
         
@@ -40,7 +40,7 @@ public class TriggerArea : MonoBehaviour
         if (player != null)
         {
             OnPlayerTrigger?.Invoke(this, EventArgs.Empty);
-            ortoCamera.orthographicSize = 10;
+            ortoCamera.orthographicSize = 20;
 
         }
             
