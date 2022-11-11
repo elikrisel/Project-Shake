@@ -11,7 +11,9 @@ public class ShowGun : MonoBehaviour
         public GameObject gun_1 , gun_2, backPack_L,backPack_R;
 
         public bool gunSelected;
-        
+
+        public Transform firePoint;
+
         public enum GunList
         {
                 NoGun,
@@ -19,6 +21,7 @@ public class ShowGun : MonoBehaviour
                 RightGun
         }
         
+
         public GunList gunState;
         
         private void Start()
@@ -46,19 +49,26 @@ public class ShowGun : MonoBehaviour
                                 break;
                 }
                 
-                if (Input.GetKey(KeyCode.Alpha1))
-                {
-                        gunState = GunList.LeftGun;
-                }
-                if (Input.GetKey(KeyCode.Alpha2))
-                {
-                        gunState = GunList.RightGun;
-                }
                 
         }
+        public void Shooting()
+        {
+            
+            Ray ray = new Ray(firePoint.position, firePoint.forward);
+            RaycastHit hit;
 
+            float distance = 20f;
 
-        private void Left()
+            if(Physics.Raycast(ray,out hit, distance))
+            {
+                distance = hit.distance;
+
+            }
+            Debug.DrawRay(ray.origin, ray.direction * distance, Color.red, 1);
+
+        }
+
+        public void Left()
         {
                 gun_1.SetActive(true);
                 gun_2.SetActive(false);
@@ -66,7 +76,7 @@ public class ShowGun : MonoBehaviour
                 backPack_R.SetActive(true);
         }
 
-        private void Right()
+        public void Right()
         {
                 gun_1.SetActive(false);
                 gun_2.SetActive(true);

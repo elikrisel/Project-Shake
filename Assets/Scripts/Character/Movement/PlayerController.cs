@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    [Header("Components")]
    private PlayerControls input;
    private Rigidbody rb;
+    public ShowGun gun;
+    
+   
    
    [SerializeField]
    private Transform orientation;
@@ -51,6 +54,7 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
 
    [Header("Conditions")]
    public bool usingGamepad;
+    public bool buttonPressed;
    
 
    #region Enable and Disable
@@ -213,7 +217,7 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
 
    private void LookRotation(Vector3 direction)
    {
-
+      
       transform.LookAt(direction);
 
    }
@@ -225,17 +229,10 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    {
       var buttonPress = input.Player_Gamepad.Shoot;
       buttonPrompt = buttonPress;
-      
-      if (ctx.action.actionMap.name == "Player_KBM")
-      {
-         state = ControllerState.Keyboard;
 
-      }
-      else
-      {
-         state = ControllerState.Gamepad;
-      }
-      Shoot();
+        state = ctx.action.actionMap.name == "Player_KBM" ? ControllerState.Keyboard : ControllerState.Gamepad;
+
+        Shoot();
    }
    void PlayerControls.IPlayer_GamepadActions.OnShoot(InputAction.CallbackContext ctx)
    {
@@ -246,7 +243,13 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
 
    private void Shoot()
    {
-      
+        
+
+        if(gun.gunSelected)
+        {
+            gun.Shooting();
+        }
+        
    }
    
    #endregion
@@ -255,41 +258,43 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    
    void PlayerControls.IPlayer_KBMActions.OnSwitchWeapon(InputAction.CallbackContext ctx)
    {
-      state = ctx.action.actionMap.name == "Player_KBM" ? ControllerState.Keyboard : ControllerState.Gamepad;
-   
-      if (ctx.action.actionMap.name == "Player_KBM")
-      {
-         state = ControllerState.Keyboard;
 
-      }
-      else
-      {
-         state = ControllerState.Gamepad;
-      }
+        var buttonPress = input.Player_KBM.SwitchWeapon;
+        buttonPrompt = buttonPress;
+
+        state = ctx.action.actionMap.name == "Player_KBM" ? ControllerState.Keyboard : ControllerState.Gamepad;
+
       
       Interact();
    }
    void PlayerControls.IPlayer_GamepadActions.OnSwitchWeapon(InputAction.CallbackContext ctx)
    {
 
-      if (ctx.action.actionMap.name == "Player_Gamepad")
-      {
-         state = ControllerState.Gamepad;
 
-      }
-      else
-      {
-         state = ControllerState.Keyboard;
-      }
-      Interact();
+        var buttonPress = input.Player_Gamepad.SwitchWeapon;
+        buttonPrompt = buttonPress;
+
+
+        state = ctx.action.actionMap.name == "Player_Gamepad" ? ControllerState.Gamepad : ControllerState.Keyboard;
+
+        Interact();
       
    }
 
    void Interact()
    {
-      
-      
-   }
+        if(!buttonPressed)
+        {
+            gun.gunState = ShowGun.GunList.LeftGun;
+            buttonPressed = true;
+        }
+        else
+        {
+            gun.gunState = ShowGun.GunList.RightGun;
+            buttonPressed = false;
+        }
+
+    }
    #endregion
    
 }
