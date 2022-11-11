@@ -2,6 +2,7 @@ using System;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 
 [RequireComponent(typeof(Rigidbody))]
@@ -10,14 +11,11 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    [Header("Components")]
    private PlayerControls input;
    private Rigidbody rb;
-    public ShowGun gun;
-    
-   
-   
+   public ShowGun showGun;
+   public GunScript gun;
    [SerializeField]
    private Transform orientation;
-
-   [SerializeField] private Transform playerArt;
+   
    
    
    
@@ -28,11 +26,9 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    private Vector2 lookInput;
    private Vector2 moveInput;
    private InputAction buttonPrompt;
-   
-   
-   [Header("Adjustable Variables")]
-    public float moveSpeed = 1.0f;
-    public float maxSpeed = 20f;
+
+
+   [Header("Adjustable Variables")] public float moveSpeed = 1.0f;
     public float dampenForce = 4f;
     public float maxDampen = 4f;
     public float controllerDeadZone = 0.1f;
@@ -243,9 +239,9 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
 
    private void Shoot()
    {
-        
+      
 
-        if(gun.gunSelected)
+        if(showGun.gunSelected)
         {
             gun.Shooting();
         }
@@ -285,12 +281,15 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    {
         if(!buttonPressed)
         {
-            gun.gunState = ShowGun.GunList.LeftGun;
+           
+            showGun.gunState = ShowGun.GunList.LeftGun;
+            gun.gunType = GunScript.GunType.Shotgun;
             buttonPressed = true;
         }
         else
         {
-            gun.gunState = ShowGun.GunList.RightGun;
+            showGun.gunState = ShowGun.GunList.RightGun;
+            gun.gunType = GunScript.GunType.Rifle;
             buttonPressed = false;
         }
 

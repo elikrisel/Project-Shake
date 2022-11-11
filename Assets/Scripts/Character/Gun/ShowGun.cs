@@ -12,8 +12,6 @@ public class ShowGun : MonoBehaviour
 
         public bool gunSelected;
 
-        public Transform firePoint;
-
         public enum GunList
         {
                 NoGun,
@@ -50,22 +48,6 @@ public class ShowGun : MonoBehaviour
                 }
                 
                 
-        }
-        public void Shooting()
-        {
-            
-            Ray ray = new Ray(firePoint.position, firePoint.forward);
-            RaycastHit hit;
-
-            float distance = 20f;
-
-            if(Physics.Raycast(ray,out hit, distance))
-            {
-                distance = hit.distance;
-
-            }
-            Debug.DrawRay(ray.origin, ray.direction * distance, Color.red, 1);
-
         }
 
         public void Left()

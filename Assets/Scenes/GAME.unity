@@ -1105,6 +1105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 624117496}
+  - component: {fileID: 624117497}
   m_Layer: 0
   m_Name: Shotgun
   m_TagString: Untagged
@@ -1131,6 +1132,22 @@ Transform:
   m_Father: {fileID: 1091369187}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &624117497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624117495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4a716f30f0c29d4cbd9659c63308869, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gunId: 1
+  gunType: 0
+  firePoint: {fileID: 885088670}
+  distance: 20
 --- !u!1 &655878905
 GameObject:
   m_ObjectHideFlags: 0
@@ -1556,15 +1573,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e91a8b1dec66c4ea4f18647e5429b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showGun: {fileID: 793434458}
+  gun: {fileID: 1351438522}
   orientation: {fileID: 1954475285}
-  playerArt: {fileID: 1091369187}
   mainCamera: {fileID: 767796311}
   moveSpeed: 50
-  maxSpeed: 20
   dampenForce: 4
   maxDampen: 35
+  controllerDeadZone: 0.1
+  rotateSmoothness: 1000
   state: 0
   usingGamepad: 0
+  buttonPressed: 0
 --- !u!114 &793434458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2300,6 +2320,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1351438521}
+  - component: {fileID: 1351438522}
   m_Layer: 0
   m_Name: Rifle
   m_TagString: Untagged
@@ -2327,6 +2348,22 @@ Transform:
   m_Father: {fileID: 1091369187}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1351438522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1351438520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4a716f30f0c29d4cbd9659c63308869, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gunId: 0
+  gunType: 0
+  firePoint: {fileID: 2125525187}
+  distance: 20
 --- !u!1 &1352918281
 GameObject:
   m_ObjectHideFlags: 0
