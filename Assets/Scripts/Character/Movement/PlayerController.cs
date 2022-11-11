@@ -32,7 +32,8 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
     public float maxSpeed = 20f;
     public float dampenForce = 4f;
     public float maxDampen = 4f;
-
+    public float controllerDeadZone = 0.1f;
+    public float rotateSmoothness = 1000f;
 
     #region State
     public enum ControllerState
@@ -115,8 +116,8 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
       
       
    }
-
-   private void OnDrawGizmos()
+    #region DrawGizmos
+    private void OnDrawGizmos()
    {
       Gizmos.color = Color.blue;
       Gizmos.DrawLine(transform.position, orientation.forward);
@@ -128,10 +129,10 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
          Gizmos.DrawLine(mainCamera.transform.position, hit.point);
       }
    }
+    #endregion
 
-
-   #region Movement interface
-   void PlayerControls.IPlayer_GamepadActions.OnMove(InputAction.CallbackContext ctx)
+    #region Movement interface
+    void PlayerControls.IPlayer_GamepadActions.OnMove(InputAction.CallbackContext ctx)
    {
       
          readInput = ctx.ReadValue<Vector2>();
@@ -188,19 +189,25 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    {
       readInput = ctx.ReadValue<Vector2>();
       lookInput = readInput;
-      Ray ray = mainCamera.ScreenPointToRay(readInput);
+      
+       if(Mathf.Abs(readInput.x) > controllerDeadZone || Mathf.Abs(readInput.y) > controllerDeadZone)
+       {
 
-      Vector3 targetDirection = Vector3.zero;
-      if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
-      {
-         targetDirection = new Vector3(hit.point.x,transform.position.y,hit.point.z);
-         print("look target: " + targetDirection);
-      }
+            Vector3 targetDirection = Vector3.right * readInput.x + Vector3.forward * readInput.y;
+            if(targetDirection.sqrMagnitude > 0.0f)
+            {
+                Quaternion newRot = Quaternion.LookRotation(targetDirection, Vector3.up);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, newRot, rotateSmoothness * Time.deltaTime);
+            }
+
+       }
+        
+
+
       
       state = ctx.action.actionMap.name == "Player_Gamepad" ? ControllerState.Gamepad : ControllerState.Keyboard;
       
-      LookRotation(targetDirection);
-
+      
 
 }
 
