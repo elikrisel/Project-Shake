@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4557160652238745540}
   - component: {fileID: 4847388632629389292}
   - component: {fileID: 3250665919496259782}
-  - component: {fileID: 6145304008195425072}
   - component: {fileID: 5566645846068860476}
   m_Layer: 0
   m_Name: MrBucket
@@ -25535,19 +25534,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &6145304008195425072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 284390718245008320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a902271b2b7a989438e614505d7816d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyPf: {fileID: 284390718245008320}
 --- !u!65 &5566645846068860476
 BoxCollider:
   m_ObjectHideFlags: 0
