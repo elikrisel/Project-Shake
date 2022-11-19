@@ -1,18 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.ProBuilder.MeshOperations;
-using Random = UnityEngine.Random;
+
 
 public class ArenaBattle : MonoBehaviour
 {
   [SerializeField] TriggerArea triggerArea;
-  
+
   [SerializeField] ShowGun showGun;
 
-  [SerializeField] private EnemySpawn enemyPf;
+  [SerializeField]private List<Vector3> enemySpawnList;
+  
+  [SerializeField] private EnemySpawn[] spawnEnemy;
+  
   
   public bool enemiesLeft;
 
@@ -33,6 +34,13 @@ public class ArenaBattle : MonoBehaviour
 
   private void Awake()
   {
+    enemySpawnList = new List<Vector3>();
+    foreach (Vector3 es in enemySpawnList)
+    {
+      enemySpawnList.Add(es);
+      
+    }
+    
     state = StateOfGame.Idle;
     
   }
@@ -40,9 +48,6 @@ public class ArenaBattle : MonoBehaviour
 
   void Start()
   {
-    
-    
-    
     
     triggerArea.OnPlayerTrigger += TriggerAreaOnOnPlayerTrigger;
     
@@ -70,26 +75,34 @@ public class ArenaBattle : MonoBehaviour
     
     Debug.Log("Arena commencing");
     state = StateOfGame.Active;
-    enemiesLeft = true;
+
+    foreach (EnemySpawn e in spawnEnemy)
+    {
+      if (e != null)
+      {
+        e.Spawn();
+        
+
+      }
+      else
+      {
+        EndBattle();
+      }
+       
+      Debug.Log(e);
+      
+      
+    }
+    
+    
+    
     OnBattleStarted?.Invoke(this, EventArgs.Empty);
     if (showGun.gunSelected)
     {
       return;
     }
     showGun.gunState = ShowGun.GunList.RightGun;  
-
-        
-      
     
-    
-    SpawnEnemy();  
-     
-    
-    if (enemiesLeft)
-    {
-      EndBattle();
-      
-    }
 
   }
 
@@ -103,15 +116,7 @@ public class ArenaBattle : MonoBehaviour
 
   }
 
+  
 
-  private void SpawnEnemy()
-  {
-    Vector3 spawnPosition = new Vector3(0, 0, -103);
-    
-    enemyPf = Instantiate(enemyPf, spawnPosition, Quaternion.identity);
-
-
-
-  }
   
 }
