@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    private Rigidbody rb;
    public ShowGun showGun;
    public GunScript gun;
+   
 
    [Header("UI")]
    public GameObject environmentTextKBM;
@@ -83,9 +84,9 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    private void Awake()
    {
       rb = GetComponent<Rigidbody>();
-      
-      
+
    }
+   
 
    private void Update()
    {
@@ -303,6 +304,16 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
         }
 
    }
+
+
+   private void OnCollisionEnter(Collision collision)
+   {
+      if (collision.gameObject.CompareTag("Saboteur"))
+      {
+         CameraShake.instance.ShakeCamera();
+      }
+   }
+
    #endregion
    
 }

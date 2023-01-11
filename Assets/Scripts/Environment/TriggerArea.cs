@@ -25,7 +25,7 @@ public class TriggerArea : MonoBehaviour
     
     void Update()
     {
-        Debug.Log("Time before disable: " + timeBeforeDisable);
+        //Debug.Log("Time before disable: " + timeBeforeDisable);
         //Debug.Log("Orthographic size: " + orthoCamera.orthographicSize);
 
         if (arenaBattle.arenaActivated)
