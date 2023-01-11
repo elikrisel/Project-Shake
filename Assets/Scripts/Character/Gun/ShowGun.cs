@@ -1,15 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Serialization;
+
 
 public class ShowGun : MonoBehaviour
 {
         [Header("Gun GameObjects")] 
         public GameObject gun_1 , gun_2, backPack_L,backPack_R;
 
+        [Header("UI Object")] 
+        public GameObject shotgun_UI;
+        public GameObject rifle_UI;
+        
+        
         public bool gunSelected;
 
         public enum GunList
@@ -25,6 +29,9 @@ public class ShowGun : MonoBehaviour
         private void Start()
         {
                 gunState = GunList.NoGun;
+                shotgun_UI.SetActive(false);
+                rifle_UI.SetActive(false);
+                
         }
 
         private void Update()
@@ -56,6 +63,9 @@ public class ShowGun : MonoBehaviour
                 gun_2.SetActive(false);
                 backPack_L.SetActive(false);
                 backPack_R.SetActive(true);
+                shotgun_UI.SetActive(true);
+                rifle_UI.SetActive(false);
+                
         }
 
         public void Right()
@@ -64,6 +74,8 @@ public class ShowGun : MonoBehaviour
                 gun_2.SetActive(true);
                 backPack_L.SetActive(true);
                 backPack_R.SetActive(false);
+                shotgun_UI.SetActive(false);
+                rifle_UI.SetActive(true);
         }
         
         
