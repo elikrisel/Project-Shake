@@ -17,7 +17,7 @@ public class CameraShake : MonoBehaviour
     public bool shakeOnImpact = false;
     
     [Header("Camera position")]
-    Vector3 originalPos;
+    private Vector3 cameraPosition;
 
     public static CameraShake instance;
     
@@ -39,7 +39,7 @@ public class CameraShake : MonoBehaviour
 
     void OnEnable()
     {
-        originalPos = mainCamera.localPosition;
+        cameraPosition = mainCamera.localPosition;
     }
 
     void Update()
@@ -47,12 +47,12 @@ public class CameraShake : MonoBehaviour
         if (shakeOnImpact) 
         {
             if (shakeDuration > 0) {
-                mainCamera.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;
+                mainCamera.localPosition = cameraPosition + Random.insideUnitSphere * shakeAmount;
 
                 shakeDuration -= Time.deltaTime * decreaseFactor;
             } else {
                 shakeDuration = 1f;
-                mainCamera.localPosition = originalPos;
+                mainCamera.localPosition = cameraPosition;
                 shakeOnImpact = false;
             }
         }
