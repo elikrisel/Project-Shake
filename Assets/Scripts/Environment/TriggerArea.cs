@@ -36,7 +36,7 @@ public class TriggerArea : MonoBehaviour
             }
             else
             {
-                
+                orthoCamera.orthographicSize = 30;    
                 environmentText.SetActive(false);
                 
             }
@@ -63,7 +63,7 @@ public class TriggerArea : MonoBehaviour
         if (player != null)
         {
             OnPlayerTrigger?.Invoke(this, EventArgs.Empty);
-            orthoCamera.orthographicSize = 70;
+            orthoCamera.orthographicSize = 40;
             environmentText.SetActive(true);
 
         }
