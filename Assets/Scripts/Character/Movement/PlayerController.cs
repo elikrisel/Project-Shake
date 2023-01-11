@@ -13,6 +13,10 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
    public ShowGun showGun;
    public GunScript gun;
 
+   [Header("UI")]
+   public GameObject environmentTextKBM;
+   public GameObject environmentTextGamepad;
+   
    
    [SerializeField] private LayerMask clippingLayer;
    [SerializeField] private Transform orientation;
@@ -88,9 +92,13 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
       switch (state)
       {
          case ControllerState.Keyboard:
+            environmentTextKBM.SetActive(true);
+            environmentTextGamepad.SetActive(false);
             usingGamepad = false;
             break;
          case ControllerState.Gamepad:
+            environmentTextKBM.SetActive(false);
+            environmentTextGamepad.SetActive(true);
             usingGamepad = true;
             break;
          
@@ -100,6 +108,9 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
       // //set orientation
       // Vector3 viewDir = transform.position - new Vector3(mouseWorldPos.x, transform.position.y, mouseWorldPos.y);
       // orientation.forward = viewDir.normalized;
+      
+      
+      
       
    }
 
@@ -291,7 +302,7 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayer_GamepadAct
             buttonPressed = false;
         }
 
-    }
+   }
    #endregion
    
 }

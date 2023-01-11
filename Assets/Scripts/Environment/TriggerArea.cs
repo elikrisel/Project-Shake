@@ -1,35 +1,58 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TriggerArea : MonoBehaviour
 {
     [HideInInspector]
-    public Camera ortoCamera;
+    public Camera orthoCamera;
     public event EventHandler OnPlayerTrigger;
-
-    [SerializeField] private ArenaBattle arenaBattle;
+    public GameObject environmentText;
+    [SerializeField] private float timeBeforeDisable = 10f;
     
+    
+    [SerializeField] private ArenaBattle arenaBattle;
+
+   
 
     private void Awake()
     {
-        ortoCamera = Camera.main;
+        orthoCamera = Camera.main;
+        environmentText.SetActive(false);
     }
     
     void Update()
     {
-        
-        Debug.Log("Ortographic size: " + ortoCamera.orthographicSize);
+        Debug.Log("Time before disable: " + timeBeforeDisable);
+        //Debug.Log("Orthographic size: " + orthoCamera.orthographicSize);
 
-        if (arenaBattle.enemiesLeft)
+        if (arenaBattle.arenaActivated)
         {
-            ortoCamera.orthographicSize = 20;    
+            if (timeBeforeDisable > 0)
+            {
+                timeBeforeDisable -= Time.deltaTime;
+            }
+            else
+            {
+                
+                environmentText.SetActive(false);
+                
+            }
+            
+            
             
         }
-        
+            
+         
+
     }
+        
+        
+        
+        
+    
 
 
     private void OnTriggerEnter(Collider other)
@@ -40,7 +63,8 @@ public class TriggerArea : MonoBehaviour
         if (player != null)
         {
             OnPlayerTrigger?.Invoke(this, EventArgs.Empty);
-            ortoCamera.orthographicSize = 20;
+            orthoCamera.orthographicSize = 70;
+            environmentText.SetActive(true);
 
         }
             

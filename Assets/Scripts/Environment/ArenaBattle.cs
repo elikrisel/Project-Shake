@@ -7,6 +7,7 @@ using UnityEngine;
 public class ArenaBattle : MonoBehaviour
 {
   [SerializeField] TriggerArea triggerArea;
+  
 
   [SerializeField] ShowGun showGun;
 
@@ -16,6 +17,7 @@ public class ArenaBattle : MonoBehaviour
   
   
   public bool enemiesLeft;
+  public bool arenaActivated = false;
 
   public event EventHandler OnBattleStarted;
   public event EventHandler OnBattleEnded;
@@ -52,6 +54,7 @@ public class ArenaBattle : MonoBehaviour
     triggerArea.OnPlayerTrigger += TriggerAreaOnOnPlayerTrigger;
     
 
+
   } 
   
   
@@ -63,7 +66,6 @@ public class ArenaBattle : MonoBehaviour
       
       StartBattle();
       triggerArea.OnPlayerTrigger -= TriggerAreaOnOnPlayerTrigger; 
-
       
     }
 
@@ -73,7 +75,8 @@ public class ArenaBattle : MonoBehaviour
   {
 
     
-    Debug.Log("Arena commencing");
+    //Debug.Log("Arena commencing");
+    arenaActivated = true;
     state = StateOfGame.Active;
 
     foreach (EnemySpawn e in spawnEnemy)
@@ -89,7 +92,7 @@ public class ArenaBattle : MonoBehaviour
         EndBattle();
       }
        
-      Debug.Log(e);
+      //Debug.Log(e);
       
       
     }
@@ -112,7 +115,8 @@ public class ArenaBattle : MonoBehaviour
     state = StateOfGame.End;
     showGun.gunState = ShowGun.GunList.NoGun;
     OnBattleEnded?.Invoke(this,EventArgs.Empty);
-      
+    
+
 
   }
 
