@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class CameraShake : MonoBehaviour
 {
-    // Transform of the camera to shake. Grabs the gameObject's transform
-//s if null.
-    public Transform camTransform;
+    [Header("Camera")]
+    public Transform mainCamera;
 
-// How long the object should shake for.
+    [Header("Shake duration")]
     public float shakeDuration = 0f;
 
-// Amplitude of the shake. A larger value shakes the camera harder.
+    [Header("Amplitude Variables")]
     public float shakeAmount = 0.7f;
     public float decreaseFactor = 1.0f;
 
-    public bool shaketrue= false;
-
+    public bool shakeOnImpact = false;
+    
+    [Header("Camera position")]
     Vector3 originalPos;
 
     public static CameraShake instance;
@@ -31,35 +31,35 @@ public class CameraShake : MonoBehaviour
             instance = this;
         }
         
-        if (camTransform == null)
+        if (mainCamera == null)
         {
-            camTransform = GetComponent(typeof(Transform)) as Transform;
+            mainCamera = GetComponent(typeof(Transform)) as Transform;
         }
     }
 
     void OnEnable()
     {
-        originalPos = camTransform.localPosition;
+        originalPos = mainCamera.localPosition;
     }
 
     void Update()
     {
-        if (shaketrue) 
+        if (shakeOnImpact) 
         {
             if (shakeDuration > 0) {
-                camTransform.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;
+                mainCamera.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;
 
                 shakeDuration -= Time.deltaTime * decreaseFactor;
             } else {
                 shakeDuration = 1f;
-                camTransform.localPosition = originalPos;
-                shaketrue = false;
+                mainCamera.localPosition = originalPos;
+                shakeOnImpact = false;
             }
         }
     }
 
     public void ShakeCamera()
     {
-        shaketrue = true;
+        shakeOnImpact = true;
     }
 }
